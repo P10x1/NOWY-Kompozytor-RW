@@ -1,0 +1,2404 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOWY Kompozytor klasówek i testów</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f6f8;
+      color: #333;
+      font-size: 13px;
+    }
+
+    /* Pasek nawigacyjny */
+    header {
+      background-color: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 10px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background-color: #ff5500;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: bold;
+      color: #222;
+      line-height: 1.1;
+    }
+
+    .logo-text span {
+      display: block;
+      font-size: 11px;
+      font-weight: normal;
+      color: #666;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 25px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #0073b1;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 20px;
+      padding-bottom: 80px;
+    }
+
+    /* Widoki aplikacji */
+    .page-view {
+      display: none;
+    }
+
+    .page-view.active {
+      display: block;
+    }
+
+    /* EKRAN 0: WYBÓR PRZEDMIOTU */
+    .selection-header {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .selection-header h1 {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .series-grid {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    .section-label {
+      font-size: 11px;
+      color: #666;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .series-item-box {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.2s;
+    }
+
+    .series-item-box:hover {
+      border-color: #0084c7;
+    }
+
+    .series-card-inner {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .series-badge-big {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 15px 25px;
+      text-align: center;
+      min-width: 180px;
+    }
+
+    .series-badge-big strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .series-badge-big span {
+      color: #ff5500;
+    }
+
+    .parts-list {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .part-btn {
+      color: #0084c7;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .part-btn:hover {
+      text-decoration: underline;
+    }
+
+    .part-btn.active {
+      font-weight: bold;
+      border-bottom: 2px solid #0084c7;
+    }
+
+    .series-actions {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed #e0e0e0;
+      display: flex;
+      gap: 25px;
+      font-size: 12px;
+    }
+
+    .series-actions a {
+      color: #0084c7;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .series-actions a:hover {
+      text-decoration: underline;
+    }
+
+    /* EKRAN 1: BAZA ZADAŃ I PODGLĄD */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr 440px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .btn-back {
+      background-color: #eef2f5;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      color: #ff5500;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    /* Lewy Panel */
+    .sidebar-series {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 15px;
+    }
+
+    .series-logo-mini {
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .series-logo-mini span {
+      color: #ff5500;
+    }
+
+    .filter-box {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 15px;
+    }
+
+    .filter-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .clear-link {
+      color: #eb5757;
+      font-size: 11px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .search-field {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 12px;
+    }
+
+    .filter-group-title {
+      font-weight: bold;
+      font-size: 12px;
+      margin: 10px 0 6px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: #444;
+    }
+
+    /* Środkowy Panel - Zadania */
+    .tab-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 10px;
+      background: #e4e8ec;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .tab-button.active {
+      background: #0084c7;
+      color: white;
+    }
+
+    .sub-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .sub-tab-btn {
+      border: 1px solid #0084c7;
+      background: white;
+      color: #0084c7;
+      padding: 6px 14px;
+      border-radius: 15px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .sub-tab-btn.active {
+      background: #0084c7;
+      color: white;
+    }
+
+    /* FORMULARZ TWORZENIA ZADANIA */
+    .custom-task-editor {
+      background: white;
+      border: 1px solid #0084c7;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,132,199,0.08);
+    }
+
+    .editor-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #0084c7;
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      gap: 4px;
+      background: #f0f4f8;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      padding: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .tb-btn {
+      background: white;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .tb-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .editable-area {
+      width: 100%;
+      min-height: 120px;
+      border: 1px solid #ccc;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      padding: 10px;
+      background: white;
+      outline: none;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-y: auto;
+    }
+
+    .editable-area:focus {
+      border-color: #0084c7;
+    }
+
+    .form-inline {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn-save-custom {
+      background: #0084c7;
+      color: white;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-save-custom:hover {
+      background: #006da7;
+    }
+
+    .task-card {
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .task-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .version-selector {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .ver-btn {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #ccc;
+      background: #f0f0f0;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .ver-btn.active {
+      background: #0084c7;
+      color: white;
+      border-color: #0084c7;
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .task-text {
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+      color: #222;
+    }
+
+    .btn-action {
+      border: 1px solid #eb5757;
+      color: #eb5757;
+      background: white;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .btn-action.add {
+      border-color: #0084c7;
+      color: #0084c7;
+    }
+
+    .btn-action.add.added {
+      background: #e6f4ea;
+      border-color: #34a853;
+      color: #1e8e3e;
+    }
+
+    .btn-action.edit {
+      border-color: #f39c12;
+      color: #d68910;
+    }
+
+    /* Prawy Panel - Podgląd Wydruku */
+    .preview-section {
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      padding: 15px;
+      overflow-x: auto;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #eb5757;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .stats-bar {
+      font-size: 11px;
+      color: #555;
+      margin-bottom: 12px;
+      background: #f9f9f9;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    .stats-bar span {
+      background: #e0e0e0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+    /* KOMPAKTOWA KARTKA PODGLĄDU Z MNIEJSZĄ CZCIONKĄ */
+    .paper-sheet {
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: 15px;
+      min-height: 500px;
+      font-size: 10.5px;
+      line-height: 1.35;
+      position: relative;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .sheet-top {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #888;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      font-size: 10px;
+    }
+
+    .sheet-group-tag {
+      background: #222;
+      color: white;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .sheet-item {
+      position: relative;
+      margin-bottom: 8px;
+      padding: 4px 6px 4px 28px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .sheet-item.selected {
+      border-color: #0084c7;
+      background: #f4f9fc;
+    }
+
+    .sheet-item-num {
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      background: #222;
+      color: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .sheet-item-pts {
+      float: right;
+      color: #666;
+      font-size: 10px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    .sheet-item-content {
+      font-size: 10.5px;
+      color: #111;
+      line-height: 1.3;
+    }
+
+    .sheet-toolbar {
+      display: none;
+      background: #0084c7;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+      font-size: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sheet-item.selected .sheet-toolbar {
+      display: flex;
+    }
+
+    .toolbar-btn {
+      cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .toolbar-btn:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    /* Pola odpowiedzi */
+    .answer-grid {
+      margin-top: 6px;
+      height: 45px;
+      background-image: linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px);
+      background-size: 10px 10px;
+      border: 1px solid #bbb;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .answer-lines {
+      margin-top: 6px;
+      height: 45px;
+      background-image: repeating-linear-gradient(transparent, transparent 10px, #ccc 11px);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .answer-box {
+      margin-top: 6px;
+      height: 45px;
+      border: 1px solid #bbb;
+    }
+
+    /* EKRAN 2: TWORZENIE GRUP I DRUKOWANIE */
+    .group-config-bar {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 20px;
+    }
+
+    .title-input-group {
+      margin-bottom: 15px;
+    }
+
+    .title-input-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .title-input-group input {
+      width: 100%;
+      max-width: 400px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .print-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .print-options label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .dual-sheets-view {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .group-column-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .group-pill {
+      border: 1px solid #0084c7;
+      color: #0084c7;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      background: white;
+    }
+
+    .group-pill.active {
+      background: #0084c7;
+      color: white;
+    }
+
+    .delete-group-btn {
+      color: #eb5757;
+      border: 1px solid #eb5757;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    /* Stópka Nawigacyjna */
+    .footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+      padding: 12px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 1000;
+    }
+
+    .btn-footer-back {
+      border: 1px solid #ccc;
+      background: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .step-indicator {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .step-indicator strong {
+      font-size: 16px;
+    }
+
+    .btn-footer-next {
+      background: #ff5500;
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-footer-save {
+      background: #0084c7;
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ready-task-item {
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background-color: #0084c7;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-primary:hover {
+      background-color: #006da7;
+    }
+
+    .task-text, .sheet-item-content {
+      white-space: pre-line;
+    }
+
+    .inline-edit-box {
+      background: #fff8e7;
+      border: 1px solid #f39c12;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    @media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 15mm 15mm; /* Zachowany odstęp na górze i dookoła */
+  }
+
+  /* Ukrywanie elementów interfejsu */
+  header, .footer-bar, .group-config-bar, .sidebar-series, .filter-box, .tab-container, 
+  .sub-tabs, .results-count, .task-card, .preview-header, .stats-bar, .sheet-toolbar, 
+  .btn-back, .group-column-header, #step-0, #step-1, .custom-task-editor {
+    display: none !important;
+  }
+  
+  body, .container {
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .page-view#step-2 {
+    display: block !important;
+  }
+
+  .dual-sheets-view {
+    display: block !important;
+  }
+
+  /* Stylizacja fizycznej strony A4 */
+  .paper-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 11px !important;
+    width: 100% !important;
+    height: 265mm !important; /* Dopisana stała wysokość robocza */
+    display: flex !important; /* Układ Flexbox */
+    flex-direction: column !important;
+    justify-content: space-between !important; /* Pcha stópkę na dół */
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* OCHRONA ZADAŃ PRZED ROZRYWANIEM MIĘDZY STRONAMI */
+  .sheet-item {
+    padding-left: 28px !important;
+    margin-bottom: 14px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .sheet-item.selected {
+    background: transparent !important;
+    border-color: transparent !important;
+  }
+
+  .sheet-item-num, .sheet-group-tag {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* STÓPKA DRUKU (widoczna tylko na wydruku) */
+  /* STÓPKA DRUKU (przyklejona do dołu przez Flexbox) */
+  .print-footer {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    position: static !important; /* Rezygnacja z pozycjonowania bezwzględnego */
+    border-top: 1px solid #333;
+    padding-top: 5px;
+    font-size: 9px;
+    color: #444;
+    margin-top: auto !important; /* Zapewnia dociśnięcie do dołu */
+  }
+}
+
+/* Ukrycie stópki druku w podglądzie ekranowym */
+.print-footer {
+  display: none;
+}
+	@media print {
+  body {
+    /* Przesuwa całą zawartość strony o 1 mm w dół */
+    margin-top: 1mm !important;
+  }
+}
+@media print {
+  .sheet-header {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- Pasek górny -->
+  <header>
+    <div class="logo-container" onclick="goToStep(0)">
+      <div class="logo-icon">⪜</div>
+      <div class="logo-text">
+        NOWY Kompozytor
+        <span>klasówek i testów <b>rejskiego wydawnictwa</b></span>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#" onclick="goToStep(0)">📖 Twoje serie</a></li>
+        <li><a href="#">❓ Pomoc</a></li>
+        <li><a href="#">👤 Zalogowano jako: Piotr Rejmentowski</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+
+    <!-- EKRAN 0: WYBÓR DZIAŁU / SERII -->
+    <section id="step-0" class="page-view active">
+      <div class="selection-header">
+        <h1>Twoje przedmioty</h1>
+      </div>
+
+      <div class="series-grid">
+        <div class="section-label">SZKOŁA PODSTAWOWA</div>
+
+        <div class="series-item-box">
+          <div class="series-card-inner">
+            <div class="series-badge-big">
+              <strong>Odkryj</strong>
+              <span>Język piotrowski</span>
+              <div style="font-size: 10px; color: #777; margin-top: 4px;">Język piotrowski - poziom A3</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #888; margin-bottom: 5px;">Wybierz klasę:</div>
+              <div class="parts-list">
+                <span class="part-btn active" onclick="selectPart('Klasa 6', this)">Klasa 6 (A3)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="series-actions">
+            <span style="color: #666; font-weight: bold;">Co otworzyć?</span>
+            <a onclick="actionBrowseTasks()">↗ Przeglądaj zadania</a>
+            <a onclick="actionCreateTasks()">+ Utwórz zadanie</a>
+            <a onclick="actionBrowseTests()">↳ Przeglądaj i pobieraj testy</a>
+          </div>
+        </div>
+	  
+	  <!-- Kolejna seria -->
+	  
+	  <div class="series-item-box">
+          <div class="series-card-inner">
+            <div class="series-badge-big">
+              <strong>NOWE</strong>
+              <span>Piotrowskie słowa</span>
+              <div style="font-size: 10px; color: #777; margin-top: 4px;">Język piotrowski</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #888; margin-bottom: 5px;">Wkrótce</div>
+              <div class="parts-list">
+              </div>
+            </div>
+          </div>
+
+          <div class="series-actions">
+            <span style="color: #666; font-weight: bold;">Co otworzyć?</span>
+            <a onclick="">Brak dostępnych opcji</a>
+          </div>
+        </div>
+		</div>
+		
+		<br><br>
+		<!-- Kolejna seria -->
+		 <div class="series-grid">
+        <div class="section-label">LICEUM OGÓLNOKSZTAŁCĄCE</div>
+		
+		<div class="series-item-box">
+          <div class="series-card-inner">
+            <div class="series-badge-big">
+              <strong>Piotrowskie</strong>
+              <span>zastosowanie</span>
+              <div style="font-size: 10px; color: #777; margin-top: 4px;">Język piotrowski - Liceum</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #888; margin-bottom: 5px;">Wkrótce</div>
+              <div class="parts-list">
+              </div>
+            </div>
+          </div>
+
+          <div class="series-actions">
+            <span style="color: #666; font-weight: bold;">Co otworzyć?</span>
+            <a onclick="">Brak dostępnych opcji</a>
+          </div>
+        </div>
+		
+		
+      </div>
+	  
+	  
+	  
+    </section>
+
+    <!-- EKRAN 1: KROK 1 - WYBÓR ZADAŃ I PODGLĄD TESTU -->
+    <section id="step-1" class="page-view">
+      <button class="btn-back" onclick="goToStep(0)">‹ Powrót do przedmiotów</button>
+
+      <div class="main-layout">
+        
+        <!-- Sidebar -->
+        <aside>
+  <div class="sidebar-series">
+    <div class="series-logo-mini">Odkryj <span>język piotrowski</span></div>
+    <div id="selected-part-label" style="font-size: 11px; color: #666;">Szkoła podstawowa • Klasa 6</div>
+  </div>
+
+  <div class="filter-box">
+    <div class="filter-title">
+      <span>Filtry zadań</span>
+      <span class="clear-link" onclick="resetFilters()">wyczyść x</span>
+    </div>
+    
+    <input type="text" id="search-input" class="search-field" placeholder="Wpisz szukane słowo" oninput="renderTasks()">
+
+    <div class="form-group">
+      <label for="filter-section">Dział:</label>
+      <select id="filter-section" class="form-control" onchange="handleSectionChange()">
+        <option value="">-- Wszystkie działy --</option>
+        <option value="Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.">Dział 1. Podstawy języka i części mowy</option>
+        <option value="Dział 2. Podstawy gramatyki języka piotrowskiego. Past Simple.">Dział 2. Gramatyka i Past Simple</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="filter-topic">Temat:</label>
+      <select id="filter-topic" class="form-control" disabled onchange="applyFilters()">
+        <option value="">-- Najpierw wybierz dział --</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="filter-type">Typ zadania:</label>
+      <select id="filter-type" class="form-control" onchange="applyFilters()">
+        <option value="">-- Wszystkie typy zadań --</option>
+        <option value="A/B/C">A/B/C</option>
+        <option value="Przyporządkowanie">Przyporządkowanie</option>
+        <option value="Otwarte">Otwarte</option>
+        <option value="Wypowiedź pisemna">Wypowiedź pisemna</option>
+        <option value="Zadanie z czytaniem">Zadanie z czytaniem</option>
+        <option value="Uzupełnianie luk">Uzupełnianie luk</option>
+        <option value="Tłumaczenie">Tłumaczenie</option>
+      </select>
+    </div>
+  </div>
+</aside>
+
+        <!-- Środek: Lista Zadań / Formularz -->
+        <main>
+          <div class="tab-container">
+            <button class="tab-button" id="tab-btn-tests" onclick="switchMainTab('tests')">Baza testów</button>
+            <button class="tab-button active" id="tab-btn-tasks" onclick="switchMainTab('tasks')">Baza zadań</button>
+          </div>
+
+          <div class="sub-tabs">
+            <button class="sub-tab-btn active" id="subtab-browse" onclick="setSubTab('browse')">🔍 Przeglądaj gotowe</button>
+            <button class="sub-tab-btn" id="subtab-create" onclick="setSubTab('create')">➕ Utwórz własne zadanie</button>
+          </div>
+
+          <!-- FORMULARZ TWORZENIA WŁASNEGO ZADANIA -->
+          <div id="custom-task-form-box" class="custom-task-editor" style="display: none;">
+            <div class="editor-title">✏️ Utwórz własne zadanie</div>
+            
+            <div class="form-group">
+              <label for="custom-title">Tytuł zadania (opcjonalnie):</label>
+              <input type="text" id="custom-title" class="form-control" placeholder="np. Zadanie z odmiany czasownika...">
+            </div>
+
+            <div class="form-group">
+              <label>Treść zadania:</label>
+              <!-- Pasek edytora -->
+              <div class="editor-toolbar">
+                <button type="button" class="tb-btn" onclick="execFormat('bold')" title="Pogrubienie"><b>B</b></button>
+                <button type="button" class="tb-btn" onclick="execFormat('italic')" title="Kursywa"><i>I</i></button>
+                <button type="button" class="tb-btn" onclick="execFormat('underline')" title="Podkreślenie"><u>U</u></button>
+                <button type="button" class="tb-btn" onclick="execFormat('insertUnorderedList')" title="Lista">• Lista</button>
+                <button type="button" class="tb-btn" onclick="execFormat('formatBlock', 'h4')" title="Nagłówek">H4</button>
+                <span style="border-left:1px solid #ccc; height:16px; margin:0 4px;"></span>
+                <span style="font-size:11px; color:#555;">Miejsce na odpowiedź:</span>
+                <button type="button" class="tb-btn" onclick="appendAnswerFieldToEditor('grid')">▦ Kratka</button>
+                <button type="button" class="tb-btn" onclick="appendAnswerFieldToEditor('lines')">☰ Linie</button>
+                <button type="button" class="tb-btn" onclick="appendAnswerFieldToEditor('box')">◽ Czysta ramka</button>
+              </div>
+              <div id="custom-content" class="editable-area" contenteditable="true"></div>
+            </div>
+
+            <div class="form-inline">
+              <div class="form-group" style="flex:1;">
+                <label for="custom-pts">Liczba punktów:</label>
+                <input type="number" id="custom-pts" class="form-control" value="2" min="1">
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label for="custom-time">Czas (w minutach):</label>
+                <input type="number" id="custom-time" class="form-control" value="5" min="1">
+              </div>
+            </div>
+
+            <button class="btn-save-custom" onclick="saveCustomTask()">💾 Zapisz i dodaj do testu</button>
+          </div>
+
+          <div class="results-count" id="task-count-label">Znalezione zadania</div>
+
+          <div id="tasks-list-container">
+            <!-- Dynamiczna lista -->
+          </div>
+        </main>
+
+        <!-- Prawy Panel: Podgląd Kartki Papieru -->
+        <aside class="preview-section">
+          <div class="preview-header">
+            <span>Twój test (Podgląd)</span>
+            <span style="color:#333; font-weight:normal;">Liczba stron: <b id="stat-pages">0</b></span>
+          </div>
+
+          <div class="stats-bar">
+            Liczba zadań: <span id="stat-tasks">0</span>
+            Liczba punktów: <span id="stat-pts">0</span>
+            Czas: <span id="stat-time">0 min</span>
+          </div>
+
+          <div class="paper-sheet" id="preview-sheet">
+            <div class="sheet-top">
+              <div>
+                Grupa <span class="sheet-group-tag">A</span> Klasa .....................<br>
+                Imię .....................................................
+              </div>
+              <div style="text-align: right;">
+                Liczba punktów ...... / <span id="sheet-max-pts">0</span> p.
+              </div>
+            </div>
+
+            <div id="sheet-items-container">
+              <!-- PUSTO NA START -->
+            </div>
+
+            <div style="position: absolute; bottom: 5px; right: 10px; font-size: 8px; color: #aaa;">
+              Generator | Odkryj język piotrowski
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- EKRAN 2: TWORZENIE GRUP I DRUKOWANIE -->
+    <section id="step-2" class="page-view">
+      <div class="group-config-bar">
+        <div class="title-input-group">
+          <label for="test-title-input">Tytuł testu *</label>
+          <input type="text" id="test-title-input" value="⪜ NOWY Kompozytor klasówek i testów RW - Test własny" oninput="updateGroupView()">
+        </div>
+
+        <div style="font-weight: bold; margin-bottom: 8px;">Określ, które dane mają być widoczne na wydruku:</div>
+        <div class="print-options">
+          <label><input type="checkbox" id="opt-pts" checked onchange="updateGroupView()"> liczba punktów</label>
+          <label><input type="checkbox" id="opt-grade" onchange="updateGroupView()"> ocena</label>
+          <label><input type="checkbox" id="opt-date" onchange="updateGroupView()"> data</label>
+          <label><input type="checkbox" id="opt-title" checked onchange="updateGroupView()"> tytuł</label>
+          <label><input type="checkbox" id="opt-time" checked onchange="updateGroupView()"> szacowany czas</label>
+          <label><input type="checkbox" id="opt-num" onchange="updateGroupView()"> numer w dzienniku</label>
+          <label><input type="checkbox" id="opt-name" checked onchange="updateGroupView()"> imię i nazwisko</label>
+        </div>
+      </div>
+
+      <div class="stats-bar" style="margin-bottom: 20px;">
+        Liczba stron: 1, Liczba zadań: <span id="krok2-tasks">0</span>, Liczba punktów: <span id="krok2-pts">0</span>, Szacowany czas: <span id="krok2-time">0 min</span>
+      </div>
+
+      <div class="dual-sheets-view">
+        <div>
+          <div class="group-column-header">
+            <span>Grupa</span>
+            <button class="group-pill active">A</button>
+            <button class="group-pill">B</button>
+            <span class="delete-group-btn">⊖</span>
+          </div>
+          <div class="paper-sheet" id="sheet-group-a"></div>
+        </div>
+
+        <div>
+          <div class="group-column-header">
+            <span>Grupa</span>
+            <button class="group-pill">A</button>
+            <button class="group-pill active">B</button>
+            <span class="delete-group-btn">⊖</span>
+          </div>
+          <div class="paper-sheet" id="sheet-group-b"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Pasek dolny stópki -->
+  <footer class="footer-bar" id="main-footer" style="display:none;">
+    <button class="btn-footer-back" id="footer-back-btn" onclick="prevStep()">‹ Dodaj więcej zadań</button>
+    <div class="step-indicator">Krok <strong id="step-indicator-num">1</strong> z 2</div>
+    <button class="btn-footer-next" id="footer-next-btn" onclick="nextStep()">Przejdź do tworzenia grup</button>
+  </footer>
+
+  <script>
+  // BAZA ZADAŃ
+  
+  
+  const topicsBySection = {
+  "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.": [
+    "1. Alfabet języka piotrowskiego oraz dziedziny alfabetyki.",
+    "2. Wprowadzenie do języka. Osoby, liczba pojedyncza oraz liczba mnoga.",
+    "3. Podstawy części mowy. Rzeczowniki, czasowniki oraz przyimki.",
+    "4. Przymiotniki i przysłówki. Końcówka przymiotnikowo osobowa i kolory.",
+    "5. Liczebniki, czyli liczby oraz daty z nimi związane."
+  ],
+  "Dział 2. Podstawy gramatyki języka piotrowskiego. Past Simple.": [
+    "1. Podstawy gramatyki piotrowskiej, czyli przeczenia, czasy i informacje.",
+    "2. Wprowadzenie do czasu gramatycznego Past Simple.",
+    "3. Past Simple - zastosowanie ogólność i wyrażanie upodobań.",
+    "4. Past Simple - zastosowanie regularność.",
+    "5. Past Simple - zastosowanie opis osobowy stały.",
+    "6. Podstawy zaimków osobowych."
+  ]
+};
+
+const taskTypesList = [
+  "A/B/C",
+  "Przyporządkowanie",
+  "Otwarte",
+  "Wypowiedź pisemna",
+  "Zadanie z czytaniem",
+  "Uzupełnianie luk",
+  "Tłumaczenie"
+];
+
+  let databaseTasks = [
+  {
+    id: 1,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "1. Alfabet języka piotrowskiego oraz dziedziny alfabetyki.",
+    type: "Otwarte",
+    level: 'p2',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Podaj zamiany wyrazowe typu MAPA dla:\na) Lubić\nb) Kić\nc) Mieć", pts: 3 },
+      2: { text: "Podaj zamiany wyrazowe typu MAPA dla:\na) Pić\nb) Wieć\nc) Kosić", pts: 3 }
+    }
+  },
+  {
+    id: 2,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "1. Alfabet języka piotrowskiego oraz dziedziny alfabetyki.",
+    type: "A/B/C",
+    level: 'p1',
+    time: 3,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Zaznacz poprawne tłumaczenia zamian wyrazowych typu MAPA dla:\nA. Lubić\na) Lubić -> Lubici -> Lub(i)ć\nb) Lubici -> Lubić -> Lub(i)ć\nc) Lub(i)ć -> Lubić -> Lubici\n\nB. Kić\na) Kici -> Kić -> K(i)ć\nb) K(i)ć -> Kici -> Kić\nc) Kić -> Kici -> K(i)ć", pts: 1 },
+      2: { text: "Zaznacz poprawne tłumaczenia zamian wyrazowych typu MAPA dla:\nA. Pić\na) Pić -> Pici -> P(i)ć\nb) Pici -> P(i)ć -> Pici\nc) P(i)ć -> Pić -> Pici\n\nB. Wieć\na) Wieci -> Wieć -> W(i)eć\nb) Wieć -> Wieci -> W(i)eć\nc) W(i)eć -> Wieć -> Wieci", pts: 1 }
+    }
+  },
+  {
+    id: 3,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "1. Alfabet języka piotrowskiego oraz dziedziny alfabetyki.",
+    type: "Otwarte",
+    level: 'p1',
+    time: 3,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Stwierdź które zdanie jest prawdziwe a które fałszywe:\na) Apostrofowość to dziedzina, w której stosowane są tylko litery przemienne\nb) Przemienność to dziedzina, w której w zdaniach i wyrazach są tylko pary przemienne\nc) Mieszaność alfabetyczna łączy cechy apostrofowości i przemienności", pts: 1 },
+      2: { text: "Stwierdź które zdanie jest prawdziwe a które fałszywe:\na) Przemienność to dziedzina, w której w zdaniach i wyrazach są tylko pary przemienne\nb) Mieszaność alfabetyczna łączy cechy apostrofowości i przemienności\nc) Apostrofowość to dziedzina, w której stosowane są tylko litery przemienne", pts: 1 }
+    }
+  },
+  {
+    id: 4,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "1. Alfabet języka piotrowskiego oraz dziedziny alfabetyki.",
+    type: "Otwarte",
+    level: 'p2',
+    time: 6,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Opisz krótko czym jest:\na) Apostrofowość\nb) Przemienność\nc) Mieszaność alfabetyczna", pts: 3 }
+    }
+  },
+  {
+    id: 5,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "1. Alfabet języka piotrowskiego oraz dziedziny alfabetyki.",
+    type: "A/B/C",
+    level: 'p1',
+    time: 3,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Zaznacz rząd, w którym wymieniono tylko: A-> Litery apostrofowe, B-> Pary przemienne.\na) Ni, Ń, N(i), N’, N^i\nb) Ć, C^i, C*i, C(i)\nc) Ź, Z^i, Z(i), Z’", pts: 1 },
+      2: { text: "Zaznacz rząd, w którym wymieniono tylko: A-> Litery apostrofowe, B-> Pary przemienne.\na) Ni, Zi, Pi, M(i), K(i), L(i)\nb) M(i), Zi, Li, Ki, Ni\nc) Ni, Bi, Ci, Li, Ji", pts: 1 }
+    }
+  },
+  {
+    id: 6,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "1. Alfabet języka piotrowskiego oraz dziedziny alfabetyki.",
+    type: "A/B/C",
+    level: 'p1',
+    time: 2,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Zaznacz poprawną definicję internacjonalizmów:\na) Wyraz brzmiący podobnie lub identycznie w kilku językach\nb) Wyraz posiadający połowę podstawowych liter stosowanych w kilku językach\nc) Wyraz wyglądający identycznie jak polski ale może być amerykański lub niemiecki np. Weekend", pts: 1 }
+    }
+  },
+    {
+    id: 7,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "1. Alfabet języka piotrowskiego oraz dziedziny alfabetyki.",
+    type: "Tłumaczenie",
+    level: 'p2',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Podaj tłumaczenia internacjonalizmów stosując język angielski:\na) Pies\nb) Kot", pts: 2 },
+      2: { text: "Podaj tłumaczenia internacjonalizmów stosując język angielski:\na) Lód\nb) Mama", pts: 2 }
+    }
+  },
+  {
+    id: 8,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "2. Wprowadzenie do języka. Osoby, liczba pojedyncza oraz liczba mnoga.",
+    type: "Tłumaczenie",
+    level: 'p2',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Podaj tłumaczenia wszystkich osób należących do Gramatycznej grupy 1.", pts: 2 },
+      2: { text: "Podaj tłumaczenia wszystkich osób należących do Gramatycznej grupy 2.", pts: 2 }
+    }
+  },
+  {
+    id: 9,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "2. Wprowadzenie do języka. Osoby, liczba pojedyncza oraz liczba mnoga.",
+    type: "Otwarte",
+    level: 'p1',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Stwierdź czy poniższe osoby należą do danej grupy:\na) Me oraz Oń do grupy 1.\nb) Ti oraz Wi do grupy 2.\nc) Oń i Ań do grupy 2.", pts: 3 }
+    }
+  },
+  {
+    id: 10,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "2. Wprowadzenie do języka. Osoby, liczba pojedyncza oraz liczba mnoga.",
+    type: "Otwarte",
+    level: 'p2',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przedstaw podział osobowy w gramatyce.", pts: 2 }
+    }
+  },
+  {
+    id: 11,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "2. Wprowadzenie do języka. Osoby, liczba pojedyncza oraz liczba mnoga.",
+    type: "Otwarte",
+    level: 'p1',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Stwierdź poprawność zdań:\na) Not - obowiązuje Me, Ti, Wi, Mi\nb) Ńe - obowiązuje Oń, Ań, Iń, Thi", pts: 2 },
+      2: { text: "Stwierdź poprawność zdań:\na) Not - obowiązuje Me, Oń, Ań, Iń\nb) Ńe - obowiązuje Ti, Wi, Mi, Thi", pts: 2 }
+    }
+  },
+  {
+    id: 12,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "2. Wprowadzenie do języka. Osoby, liczba pojedyncza oraz liczba mnoga.",
+    type: "Tłumaczenie",
+    level: 'p1',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Podaj tłumaczenia wybranych 3 osób z polskimi tłumaczeniami.", pts: 3 }
+    }
+  },
+  {
+    id: 13,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "3. Podstawy części mowy. Rzeczowniki, czasowniki oraz przyimki.",
+    type: "Tłumaczenie",
+    level: 'p2',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przetłumacz podane rzeczowniki:\na) Pies\nb) Kot", pts: 2 },
+      2: { text: "Przetłumacz podane rzeczowniki:\na) Lód\nb) Mama", pts: 2 }
+    }
+  },
+  {
+    id: 14,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "3. Podstawy części mowy. Rzeczowniki, czasowniki oraz przyimki.",
+    type: "Tłumaczenie",
+    level: 'p2',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przetłumacz podane czasowniki:\na) Jeść\nb) Mieć", pts: 2 },
+      2: { text: "Przetłumacz podane czasowniki:\na) Iść\nb) Lubić", pts: 2 }
+    }
+  },
+  {
+    id: 15,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "3. Podstawy części mowy. Rzeczowniki, czasowniki oraz przyimki.",
+    type: "Tłumaczenie",
+    level: 'p1',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przetłumacz podane przyimki:\na) do miejsca\nb) z kimś\nc) za czymś", pts: 3 },
+      2: { text: "Przetłumacz podane przyimki:\na) do jakiegoś czasu\nb) dla kogoś\nc) po czymś", pts: 3 }
+    }
+  },
+  {
+    id: 16,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "3. Podstawy części mowy. Rzeczowniki, czasowniki oraz przyimki.",
+    type: "Otwarte",
+    level: 'p1',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Stwierdź poprawność zdań:\na) Rzeczownik to Rzecz / Przedmiot lub Osoba.\nb) Przyimek opisuje czynność.\nc) Czasownik łączy wyrazy i precyzuje relacje.", pts: 2 }
+    }
+  },
+  {
+    id: 17,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "3. Podstawy części mowy. Rzeczowniki, czasowniki oraz przyimki.",
+    type: "Uzupełnianie luk",
+    level: 'p2',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Wpisz odpowiednie przyimki w luki:\na) Me had gift _______________________ mej dad.\nb) Wi can met _______________________ biolge.\nc) Ti stay ________________________ szaf.", pts: 3 }
+    }
+  },
+  {
+    id: 18,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "3. Podstawy części mowy. Rzeczowniki, czasowniki oraz przyimki.",
+    type: "Otwarte",
+    level: 'p2',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Podaj przykład łączenia časownika z rzeczownikiem za pomocą przyimka.", pts: 2 }
+    }
+  },
+  {
+    id: 19,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "4. Przymiotniki i przysłówki. Końcówka przymiotnikowo osobowa i kolory.",
+    type: "Przyporządkowanie",
+    level: 'p2',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przyporządkuj opisy odpowiednim terminom:\nA. Przymiotnik\nB. Przysłówek\nC. Końcówka osobowa\nD. Kolor\n\n1. Odpowiada na pytania Jak?\n2. Odpowiada na pytanie Jaki, Jaka, Jakie?\n3. Odpowiada na pytanie Jaki, Jaka, Jakie?\n4. -en, dodawana na koniec.", pts: 3 }
+    }
+  },
+  {
+    id: 20,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "4. Przymiotniki i przysłówki. Końcówka przymiotnikowo osobowa i kolory.",
+    type: "Otwarte",
+    level: 'p2',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Podaj 2 przykłady wyrazów, będących przyimkiem i przymiotnikiem na raz.", pts: 2 }
+    }
+  },
+  {
+    id: 21,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "4. Przymiotniki i przysłówki. Końcówka przymiotnikowo osobowa i kolory.",
+    type: "Tłumaczenie",
+    level: 'p2',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przetłumacz:\na) Zielony\nb) Niebieski\nc) Różowy", pts: 2 },
+      2: { text: "Przetłumacz:\na) Czarny\nb) Czerwony\nc) Żółty", pts: 2 }
+    }
+  },
+  {
+    id: 22,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "4. Przymiotniki i przysłówki. Końcówka przymiotnikowo osobowa i kolory.",
+    type: "A/B/C",
+    level: 'p1',
+    time: 3,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Zaznacz poprawne tłumaczenia kolorów:\nA. Fioletowy\na) Falet.      b) Faletowy     c) Faletowen    d) Faleten\nB. Brązowy\na) Brązowen    b) Bęzowen      c) Beżowen      d) Brązen", pts: 2 },
+      2: { text: "Zaznacz poprawne tłumaczenia kolorów:\nA. Pomarańczowy\na) Pomarańczowen    b) Orangen          c) Pameńczowen\nB. Biały\na) Białen        b) Bełen          c) Bialyn        d) Bialen.", pts: 2 }
+    }
+  },
+  {
+    id: 23,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "5. Liczebniki, czyli liczby oraz daty z nimi związane.",
+    type: "Otwarte",
+    level: 'p2',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Podaj dwa przykłady:\na) Liczb jedności\nb) Liczb dziesiętnych\nc) Liczb większych", pts: 3 }
+    }
+  },
+  {
+    id: 24,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "5. Liczebniki, czyli liczby oraz daty z nimi związane.",
+    type: "Tłumaczenie",
+    level: 'p2',
+    time: 7,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przetłumacz podane liczby:\na) 8\nb) 27\nc) 345\nd) 1652\ne) 100 000", pts: 5 }
+    }
+  },
+  {
+    id: 25,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "5. Liczebniki, czyli liczby oraz daty z nimi związane.",
+    type: "Tłumaczenie",
+    level: 'p2',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przetłumacz podane liczby:\na) 540\nb) 12650\nc) 2 biliony", pts: 3 }
+    }
+  },
+  {
+    id: 26,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "5. Liczebniki, czyli liczby oraz daty z nimi związane.",
+    type: "A/B/C",
+    level: 'p1',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Zaznacz poprawne tłumaczenia liczb:\nA. 720\na) Śedemdaw     b) Śedemsatdaw     c) ŚedemsatXX        d) ŚedemXX\nB. 15890\na) Xpiąttajs ośemsat XIIXX     b) XpiątośemXIIXX      c) JodantajspiątsatXIIXX", pts: 2 },
+      2: { text: "Zaznacz poprawne tłumaczenia liczb:\nA. 1350\na) Jodantajstrajsat XIX       b) TajstrajsatXIX       c) Tajstrajsatpiąt\nB. 12410\na) XtajsdawtajscztarsatX     b) Xdawtajs cztarsat X       c) Xdawtajs XI X", pts: 2 }
+    }
+  },
+  {
+    id: 27,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "5. Liczebniki, czyli liczby oraz daty z nimi związane.",
+    type: "Otwarte",
+    level: 'p2',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Liczby dziesiętne dzielą się na 3 grupy. Przedstaw ich podział.", pts: 3 }
+    }
+  },
+  {
+    id: 28,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "5. Liczebniki, czyli liczby oraz daty z nimi związane.",
+    type: "Otwarte",
+    level: 'p1',
+    time: 4,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Stwierdź poprawność zdań:\na) Gdy jest liczba pojedyncza należy na początek dodać jodan.\nb) Budowanie dat polega na: Dzień + Miesiąc + Rok (dowolny rok nawet 3810)\nc) Przykładem przyimka w datach jest Mam kota od…", pts: 2 }
+    }
+  },
+  {
+    id: 29,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "5. Liczebniki, czyli liczby oraz daty z nimi związane.",
+    type: "Uzupełnianie luk",
+    level: 'p1',
+    time: 5,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Uzupełnij tłumaczenia podanych dat:\na) 13.09.2016 - Xtraj ________________ ______________Xszust\nb) 27.12.2001 - _________________ Gredn _____________ jodan.\nc) XXXjodan majen Jodantajs ośemsat XIIXX traj - 31 __________ 18________3", pts: 3 }
+    }
+  },
+  {
+    id: 30,
+    category: 'd1',
+    section: "Dział 1. Podstawy języka piotrowskiego oraz podstawowe części mowy.",
+    topic: "5. Liczebniki, czyli liczby oraz daty z nimi związane.",
+    type: "Tłumaczenie",
+    level: 'p2',
+    time: 6,
+    selectedVersion: 1,
+    versions: {
+      1: { text: "Przetłumacz podane daty:\na) 29.07.1750\nb) 11.04.2011\nc) 10.10.2010", pts: 3 }
+    }
+  }
+  ];
+
+  const topicsData = {
+    "1": [
+      "1. Alfabet i dziedziny alfabetyki",
+      "2. Osoby, liczba pojedyncza i liczba mnoga",
+      "3. Podstawy części mowy. Rzeczowniki, czasowniki i przyimki.",
+      "4. Przymiotniki i przysłówki. Końcówka osobowa i kolory.",
+      "5. Liczebniki. Czyli liczby i daty z nimi związane."
+    ],
+    "2": [
+      "1. Podstawy gramatyki języka piotrowskiego. Przeczenia, czasy i informacje.",
+      "2. Wprowadzenie do czasu gramatycznego Past Simple.",
+      "3. Past Simple - zastosowanie ogólność i wyrażanie upodobań.",
+      "4. Past Simple - zastosowanie regularność.",
+      "5. Past Simple - zastosowanie opis osobowy stały.",
+      "6. Podstawy zaimków osobowych"
+    ]
+  };
+
+  const readyTasksDB = [
+    { dzial: "1", temat: "1", text: "Wymień wszystkie litery alfabetu języka piotrowskiego.", pts: 2 },
+    { dzial: "1", temat: "2", text: "Przekształć podane rzeczowniki z liczby pojedynczej na mnogą.", pts: 3 },
+    { dzial: "2", temat: "2", text: "Ułóż 3 zdania w czasie Past Simple stosując zasady języka piotrowskiego.", pts: 3 }
+  ];
+
+  // STAN APLIKACJI
+  let currentStep = 0;
+  let selectedPart = 'Klasa 6';
+  let selectedTaskIds = [];
+  let selectedSheetTaskId = null;
+  let taskAnswerFields = {};
+  let editingTaskId = null;
+
+  function selectPart(partName, element) {
+    selectedPart = partName;
+    document.querySelectorAll('.part-btn').forEach(btn => btn.classList.remove('active'));
+    if (element) element.classList.add('active');
+    const label = document.getElementById('selected-part-label');
+    if (label) label.innerText = partName;
+    goToStep(1); // Automatyczne przejście do bazy zadań po kliknięciu klasy
+  }
+
+  function goToStep(step) {
+    currentStep = step;
+    document.querySelectorAll('.page-view').forEach((el, index) => {
+      el.classList.toggle('active', index === step);
+    });
+
+    const footer = document.getElementById('main-footer');
+    if (step === 0) {
+      footer.style.display = 'none';
+    } else {
+      footer.style.display = 'flex';
+      document.getElementById('step-indicator-num').innerText = step;
+      
+      const nextBtn = document.getElementById('footer-next-btn');
+      if (step === 1) {
+        nextBtn.className = "btn-footer-next";
+        nextBtn.innerText = "Przejdź do tworzenia grup";
+        nextBtn.onclick = nextStep;
+      } else if (step === 2) {
+        nextBtn.className = "btn-footer-save";
+        nextBtn.innerText = "💾 Zapisz i zamknij (Drukuj)";
+        nextBtn.onclick = () => window.print();
+      }
+    }
+
+    if (step === 1) {
+      renderTasks();
+      renderPreviewSheet();
+    } else if (step === 2) {
+      updateGroupView();
+    }
+  }
+
+  function actionBrowseTasks() {
+    goToStep(1);
+    switchMainTab('tasks');
+    setSubTab('browse');
+  }
+
+  function actionCreateTasks() {
+    goToStep(1);
+    switchMainTab('tasks');
+    setSubTab('create');
+  }
+
+  function actionBrowseTests() {
+    goToStep(1);
+    switchMainTab('tests');
+  }
+
+  function switchMainTab(tabName) {
+    const btnTests = document.getElementById('tab-btn-tests');
+    const btnTasks = document.getElementById('tab-btn-tasks');
+    if (tabName === 'tests') {
+      btnTests.classList.add('active');
+      btnTasks.classList.remove('active');
+      document.getElementById('custom-task-form-box').style.display = 'none';
+      document.getElementById('tasks-list-container').innerHTML = `
+        <div style="background:white; padding:20px; border-radius:8px; border:1px solid #e0e0e0; text-align:center; color:#666;">
+          ⚠️ Brak gotowych testów. Przejdź do tworzenia własnego testu.
+        </div>`;
+    } else {
+      btnTasks.classList.add('active');
+      btnTests.classList.remove('active');
+      renderTasks();
+    }
+  }
+
+  function setSubTab(subName) {
+    document.getElementById('subtab-browse').classList.toggle('active', subName === 'browse');
+    document.getElementById('subtab-create').classList.toggle('active', subName === 'create');
+    
+    const formBox = document.getElementById('custom-task-form-box');
+    if (subName === 'create') {
+      formBox.style.display = 'block';
+    } else {
+      formBox.style.display = 'none';
+    }
+    renderTasks();
+  }
+
+  function execFormat(command, value = null) {
+    document.execCommand(command, false, value);
+  }
+
+  function appendAnswerFieldToEditor(type) {
+    const area = document.getElementById('custom-content');
+    if (type === 'grid') area.innerHTML += '<div class="answer-grid" contenteditable="false"></div><br>';
+    if (type === 'lines') area.innerHTML += '<div class="answer-lines" contenteditable="false"></div><br>';
+    if (type === 'box') area.innerHTML += '<div class="answer-box" contenteditable="false"></div><br>';
+  }
+
+  function saveCustomTask() {
+    const title = document.getElementById('custom-title').value.trim();
+    const content = document.getElementById('custom-content').innerHTML.trim();
+    const pts = parseInt(document.getElementById('custom-pts').value) || 1;
+    const time = parseInt(document.getElementById('custom-time').value) || 5;
+
+    if (!content || content === '<br>') {
+      alert('Wpisz treść zadania przed zapisaniem!');
+      return;
+    }
+
+    const newId = Date.now();
+    const fullText = title ? `<b>${title}</b><br>${content}` : content;
+
+    const newTask = {
+      id: newId,
+      category: 'd1',
+      level: 'p1',
+      time: time,
+      selectedVersion: 1,
+      versions: {
+        1: { text: fullText, pts: pts }
+      }
+    };
+
+    databaseTasks.unshift(newTask);
+    selectedTaskIds.push(newId);
+
+    document.getElementById('custom-title').value = '';
+    document.getElementById('custom-content').innerHTML = '';
+
+    renderTasks();
+    renderPreviewSheet();
+  }
+
+  function nextStep() {
+    if (currentStep < 2) goToStep(currentStep + 1);
+  }
+
+  function prevStep() {
+    if (currentStep > 0) goToStep(currentStep - 1);
+  }
+
+  function openInlineEdit(taskId) {
+    editingTaskId = (editingTaskId === taskId) ? null : taskId;
+    renderTasks();
+  }
+
+  function saveInlineTask(taskId) {
+  const task = databaseTasks.find(t => t.id === taskId);
+  if (!task) return;
+
+  const newText = document.getElementById(`edit-text-${taskId}`).value;
+  const newPts = parseInt(document.getElementById(`edit-pts-${taskId}`).value) || 1;
+  const newTime = parseInt(document.getElementById(`edit-time-${taskId}`).value) || 1;
+
+  task.time = newTime;
+  task.versions[task.selectedVersion].text = newText;
+  task.versions[task.selectedVersion].pts = newPts;
+
+  editingTaskId = null;
+  renderTasks();
+  renderPreviewSheet();
+}
+
+  function cancelInlineEdit() {
+    editingTaskId = null;
+    renderTasks();
+  }
+
+  function renderTasks() {
+  const container = document.getElementById('tasks-list-container');
+  if (!container || document.getElementById('tab-btn-tests').classList.contains('active')) return;
+
+  const searchVal = document.getElementById('search-input').value.toLowerCase();
+  const selectedSection = document.getElementById('filter-section').value;
+  const selectedTopic = document.getElementById('filter-topic').value;
+  const selectedType = document.getElementById('filter-type').value;
+
+  const filtered = databaseTasks.filter(t => {
+    const ver = t.versions[t.selectedVersion];
+    const matchesSearch = ver.text.toLowerCase().includes(searchVal);
+    const matchesSection = !selectedSection || t.section === selectedSection;
+    const matchesTopic = !selectedTopic || t.topic === selectedTopic;
+    const matchesType = !selectedType || t.type === selectedType;
+
+    return matchesSearch && matchesSection && matchesTopic && matchesType;
+  });
+
+  document.getElementById('task-count-label').innerText = `Znalezione zadania (${filtered.length})`;
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="background:white; padding:20px; border-radius:8px; border:1px solid #e0e0e0; text-align:center; color:#666;">
+      Brak zadań spełniających podane kryteria.
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(t => {
+    const isAdded = selectedTaskIds.includes(t.id);
+    const currentVer = t.versions[t.selectedVersion];
+    const hasMultipleVersions = Object.keys(t.versions).length > 1;
+    const isEditing = (editingTaskId === t.id);
+
+    return `
+      <div class="task-card">
+        <div class="task-card-header">
+          <div class="version-selector">
+            ${hasMultipleVersions ? `Wersja: ${Object.keys(t.versions).map(vNum => `
+              <button class="ver-btn ${t.selectedVersion == vNum ? 'active' : ''}" 
+                      onclick="changeTaskVersion(${t.id}, ${vNum})">${vNum}</button>
+            `).join('')}` : '<span style="color:#0084c7; font-weight:bold;">Własne zadanie</span>'}
+          </div>
+          <div class="task-meta">
+            <span style="color:#4caf50;">●●●</span>
+            <span>⏱ ${t.time} min</span>
+            <span>⭐ ${currentVer.pts} pkt</span>
+            <input type="checkbox" ${isAdded ? 'checked' : ''} onchange="toggleTask(${t.id})">
+          </div>
+        </div>
+        
+        ${isEditing ? `
+          <div class="inline-edit-box">
+            <div class="form-group">
+              <label>Treść zadania (Wersja ${t.selectedVersion}):</label>
+              <textarea id="edit-text-${t.id}" class="form-control" rows="4">${currentVer.text}</textarea>
+            </div>
+            <div class="form-inline" style="margin-bottom: 10px;">
+              <div class="form-group" style="flex:1;">
+                <label>Punkty:</label>
+                <input type="number" id="edit-pts-${t.id}" class="form-control" value="${currentVer.pts}" min="1">
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label>Czas (min):</label>
+                <input type="number" id="edit-time-${t.id}" class="form-control" value="${t.time}" min="1">
+              </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn-save-custom" onclick="saveInlineTask(${t.id})">💾 Zapisz zmiany</button>
+              <button class="btn-footer-back" onclick="cancelInlineEdit()">Anuluj</button>
+            </div>
+          </div>
+        ` : `
+          <div class="task-text">${currentVer.text}</div>
+        `}
+        
+        <div style="display:flex; gap:10px; margin-top: 10px;">
+          <button class="btn-action ${isAdded ? 'added' : 'add'}" onclick="toggleTask(${t.id})">
+            ${isAdded ? '✓ Dodano do testu' : '⊕ Dodaj do testu'}
+          </button>
+          <button class="btn-action edit" onclick="openInlineEdit(${t.id})">
+            ✏️ ${isEditing ? 'Zamknij edycję' : 'Edytuj'}
+          </button>
+          ${isAdded ? `<button class="btn-action" onclick="toggleTask(${t.id})">⊖ Usuń</button>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Zaktualizowana funkcja podpinająca filtry do głównego renderingu:
+function handleSectionChange() {
+  const sectionSelect = document.getElementById('filter-section');
+  const topicSelect = document.getElementById('filter-topic');
+  const selectedSection = sectionSelect.value;
+
+  topicSelect.innerHTML = '<option value="">-- Wszystkie tematy --</option>';
+
+  if (selectedSection && topicsBySection[selectedSection]) {
+    topicsBySection[selectedSection].forEach(topic => {
+      const opt = document.createElement('option');
+      opt.value = topic;
+      opt.textContent = topic;
+      topicSelect.appendChild(opt);
+    });
+    topicSelect.disabled = false;
+  } else {
+    topicSelect.disabled = true;
+  }
+
+  renderTasks();
+}
+
+function applyFilters() {
+  renderTasks();
+}
+
+// Zaktualizowana funkcja podpinająca filtry do głównego renderingu:
+function handleSectionChange() {
+  const sectionSelect = document.getElementById('filter-section');
+  const topicSelect = document.getElementById('filter-topic');
+  const selectedSection = sectionSelect.value;
+
+  topicSelect.innerHTML = '<option value="">-- Wszystkie tematy --</option>';
+
+  if (selectedSection && topicsBySection[selectedSection]) {
+    topicsBySection[selectedSection].forEach(topic => {
+      const opt = document.createElement('option');
+      opt.value = topic;
+      opt.textContent = topic;
+      topicSelect.appendChild(opt);
+    });
+    topicSelect.disabled = false;
+  } else {
+    topicSelect.disabled = true;
+  }
+
+  renderTasks();
+}
+
+function applyFilters() {
+  renderTasks();
+}
+
+  function changeTaskVersion(taskId, verNum) {
+    const task = databaseTasks.find(t => t.id === taskId);
+    if (task) {
+      task.selectedVersion = verNum;
+      renderTasks();
+      renderPreviewSheet();
+    }
+  }
+
+  function toggleTask(taskId) {
+    if (selectedTaskIds.includes(taskId)) {
+      selectedTaskIds = selectedTaskIds.filter(id => id !== taskId);
+    } else {
+      selectedTaskIds.push(taskId);
+    }
+    renderTasks();
+    renderPreviewSheet();
+  }
+
+  function resetFilters() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('filter-section').value = '';
+  
+  const topicSelect = document.getElementById('filter-topic');
+  topicSelect.value = '';
+  topicSelect.disabled = true;
+  topicSelect.innerHTML = '<option value="">-- Najpierw wybierz dział --</option>';
+  
+  document.getElementById('filter-type').value = '';
+  renderTasks();
+}
+
+  function renderPreviewSheet() {
+    const container = document.getElementById('sheet-items-container');
+    let totalPts = 0;
+    let totalTime = 0;
+
+    if (selectedTaskIds.length === 0) {
+      container.innerHTML = `
+        <div style="text-align:center; padding: 40px 10px; color:#aaa; font-style:italic;">
+          Kartka jest pusta.<br>Wybierz lub dodaj zadania po lewej stronie.
+        </div>`;
+      document.getElementById('stat-tasks').innerText = 0;
+      document.getElementById('stat-pts').innerText = 0;
+      document.getElementById('stat-time').innerText = '0 min';
+      document.getElementById('stat-pages').innerText = 0;
+      document.getElementById('sheet-max-pts').innerText = 0;
+      return;
+    }
+
+    const itemsHtml = selectedTaskIds.map((id, index) => {
+      const task = databaseTasks.find(t => t.id === id);
+      const ver = task.versions[task.selectedVersion];
+      totalPts += ver.pts;
+      totalTime += task.time;
+
+      const isSelected = (selectedSheetTaskId === id);
+      const extraField = taskAnswerFields[id];
+
+      let extraFieldHtml = '';
+      if (extraField === 'grid') extraFieldHtml = '<div class="answer-grid"></div>';
+      if (extraField === 'lines') extraFieldHtml = '<div class="answer-lines"></div>';
+      if (extraField === 'box') extraFieldHtml = '<div class="answer-box"></div>';
+
+      return `
+        <div class="sheet-item ${isSelected ? 'selected' : ''}" onclick="selectSheetTask(${id})">
+          <div class="sheet-item-num">${index + 1}</div>
+          <span class="sheet-item-pts">( ... / ${ver.pts} p.)</span>
+          <div class="sheet-item-content">${ver.text}</div>
+          ${extraFieldHtml}
+
+          <div class="sheet-toolbar" onclick="event.stopPropagation()">
+            <span style="color:#ff9999; cursor:pointer;" onclick="toggleTask(${id})">⊖ Usuń</span>
+            <div>
+              Przesuń: 
+              <span class="toolbar-btn" onclick="moveTask(${id}, -1)">▴</span> 
+              <span class="toolbar-btn" onclick="moveTask(${id}, 1)">▾</span> | 
+              Pole: 
+              <span class="toolbar-btn" onclick="setAnswerField(${id}, 'grid')">▦</span> 
+              <span class="toolbar-btn" onclick="setAnswerField(${id}, 'lines')">☰</span> 
+              <span class="toolbar-btn" onclick="setAnswerField(${id}, 'box')">◽</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = itemsHtml;
+
+    document.getElementById('stat-tasks').innerText = selectedTaskIds.length;
+    document.getElementById('stat-pts').innerText = totalPts;
+    document.getElementById('stat-time').innerText = totalTime + ' min';
+    document.getElementById('stat-pages').innerText = 1;
+    document.getElementById('sheet-max-pts').innerText = totalPts;
+  }
+
+  function selectSheetTask(id) {
+    selectedSheetTaskId = id;
+    renderPreviewSheet();
+  }
+
+  function moveTask(id, dir) {
+    const idx = selectedTaskIds.indexOf(id);
+    if (idx < 0) return;
+    const newIdx = idx + dir;
+    if (newIdx >= 0 && newIdx < selectedTaskIds.length) {
+      const temp = selectedTaskIds[idx];
+      selectedTaskIds[idx] = selectedTaskIds[newIdx];
+      selectedTaskIds[newIdx] = temp;
+      renderPreviewSheet();
+    }
+  }
+
+  function setAnswerField(id, fieldType) {
+    if (taskAnswerFields[id] === fieldType) {
+      taskAnswerFields[id] = null;
+    } else {
+      taskAnswerFields[id] = fieldType;
+    }
+    renderPreviewSheet();
+  }
+
+  function updateGroupView() {
+    const title = document.getElementById('test-title-input').value;
+
+    if (title.trim() !== '') {
+        document.title = title;
+    } else {
+        document.title = "Test własny NOWY Kompozytor klasówek i testów RW"; // nazwa domyślna
+    }
+
+    const showPts = document.getElementById('opt-pts').checked;
+    const showGrade = document.getElementById('opt-grade').checked;
+    const showDate = document.getElementById('opt-date').checked;
+    const showTitle = document.getElementById('opt-title').checked;
+    showTime = document.getElementById('opt-time').checked;
+    const showNum = document.getElementById('opt-num').checked;
+    const showName = document.getElementById('opt-name').checked;
+
+    let totalPts = 0;
+    let totalTime = 0;
+
+    selectedTaskIds.forEach(id => {
+      const t = databaseTasks.find(item => item.id === id);
+      totalPts += t.versions[t.selectedVersion].pts;
+      totalTime += t.time;
+    });
+
+    document.getElementById('krok2-tasks').innerText = selectedTaskIds.length;
+    document.getElementById('krok2-pts').innerText = totalPts;
+    document.getElementById('krok2-time').innerText = totalTime + ' min';
+
+    const todayDate = new Date().toLocaleDateString('pl-PL');
+
+    function buildHeader(groupLetter) {
+      return `
+        <div class="sheet-top">
+          <div>
+            Grupa <span class="sheet-group-tag">${groupLetter}</span> 
+            ${showNum ? ' Nr w dzienniku: ..... ' : ''}
+            ${showName ? ' Imię i nazwisko: ...........................................' : ''}<br>
+            ${showDate ? ' Data: ..................... ' : ''}
+            ${showGrade ? ' Ocena: ..................... ' : ''}
+          </div>
+          <div style="text-align: right;">
+            ${showPts ? `Liczba punktów ...... / ${totalPts} p.` : ''}
+          </div>
+        </div>
+        ${showTitle ? `<h3 style="text-align:center; margin-bottom:12px; font-size:13px; font-weight:bold;">${title} ${showTime ? `(Czas: ${totalTime} min)` : ''}</h3>` : ''}
+      `;
+    }
+
+    function buildFooter() {
+      return `
+        <div class="print-footer">
+          <div><strong>⪜ NOWY Kompozytor klasówek i testów</strong> | <b>RW</b> | Rejskie wydawnictwo</div>
+          <div>${title}</div>
+          <div>Data wydruku: ${todayDate}</div>
+        </div>
+      `;
+    }
+
+    function getExtraFieldHtml(id) {
+      const extraField = taskAnswerFields[id];
+      if (extraField === 'grid') return '<div class="answer-grid"></div>';
+      if (extraField === 'lines') return '<div class="answer-lines"></div>';
+      if (extraField === 'box') return '<div class="answer-box"></div>';
+      return '';
+    }
+
+    // Grupa A
+    const sheetA = document.getElementById('sheet-group-a');
+    sheetA.innerHTML = buildHeader('A') + selectedTaskIds.map((id, idx) => {
+      const t = databaseTasks.find(item => item.id === id);
+      const ver = t.versions[t.selectedVersion];
+      return `
+        <div class="sheet-item" style="cursor:default;">
+          <div class="sheet-item-num">${idx + 1}</div>
+          ${showPts ? `<span class="sheet-item-pts">( ... / ${ver.pts} p.)</span>` : ''}
+          <div class="sheet-item-content">${ver.text}</div>
+          ${getExtraFieldHtml(id)}
+        </div>
+      `;
+    }).join('') + buildFooter();
+
+    // Grupa B
+    const sheetB = document.getElementById('sheet-group-b');
+    sheetB.innerHTML = buildHeader('B') + selectedTaskIds.map((id, idx) => {
+      const t = databaseTasks.find(item => item.id === id);
+      
+      // Dynamiczne wyznaczenie alternatywnej wersji:
+      const verKeys = Object.keys(t.versions);
+      let altVerNum = t.selectedVersion;
+      
+      if (verKeys.length > 1) {
+        // Jeśli jest więcej wersji, wybierz kolejną dostępną w pętli
+        const currentIndex = verKeys.indexOf(t.selectedVersion.toString());
+        const nextIndex = (currentIndex + 1) % verKeys.length;
+        altVerNum = verKeys[nextIndex];
+      }
+
+      const ver = t.versions[altVerNum] || t.versions[t.selectedVersion];
+      return `
+        <div class="sheet-item" style="cursor:default;">
+          <div class="sheet-item-num">${idx + 1}</div>
+          ${showPts ? `<span class="sheet-item-pts">( ... / ${ver.pts} p.)</span>` : ''}
+          <div class="sheet-item-content">${ver.text}</div>
+          ${getExtraFieldHtml(id)}
+        </div>
+      `;
+    }).join('') + buildFooter();
+  }
+
+  function updateTopics() {
+    const dzialSelect = document.getElementById("select-dzial");
+    const tematSelect = document.getElementById("select-temat");
+    const selectedDzial = dzialSelect.value;
+
+    tematSelect.innerHTML = "";
+
+    if (!selectedDzial || !topicsData[selectedDzial]) {
+      tematSelect.innerHTML = '<option value="">-- Wybierz najpierw dział --</option>';
+      renderReadyTasks();
+      return;
+    }
+
+    tematSelect.innerHTML = '<option value="">-- Wszystkie tematy --</option>';
+    topicsData[selectedDzial].forEach((tematText, index) => {
+      const opt = document.createElement("option");
+      opt.value = (index + 1).toString();
+      opt.textContent = tematText;
+      tematSelect.appendChild(opt);
+    });
+
+    renderReadyTasks();
+  }
+
+  function renderReadyTasks() {
+    const readyList = document.getElementById("ready-tasks-list");
+    if (!readyList) return;
+
+    const selectedDzial = document.getElementById("select-dzial").value;
+    const selectedTemat = document.getElementById("select-temat").value;
+
+    readyList.innerHTML = "";
+
+    const filtered = readyTasksDB.filter(task => {
+      if (selectedDzial && task.dzial !== selectedDzial) return false;
+      if (selectedTemat && task.temat !== selectedTemat) return false;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      readyList.innerHTML = "<p style='font-size:12px; color:#666;'>Brak gotowych zadań dla wybranego filtra.</p>";
+      return;
+    }
+
+    filtered.forEach(task => {
+      const item = document.createElement("div");
+      item.className = "ready-task-item";
+      item.innerHTML = `
+        <div>
+          <small><strong>Dział ${task.dzial}</strong></small><br>
+          <span>${task.text} (${task.pts} pkt)</span>
+        </div>
+        <button class="btn btn-primary" style="padding: 4px 8px; font-size:12px;" onclick="addReadyTask('${task.text.replace(/'/g, "\\'")}', ${task.pts})">+</button>
+      `;
+      readyList.appendChild(item);
+    });
+  }
+
+  function addReadyTask(text, pts) {
+    const newId = Date.now();
+    const newTask = {
+      id: newId,
+      category: 'd1',
+      level: 'p1',
+      time: 5,
+      selectedVersion: 1,
+      versions: {
+        1: { text: text, pts: pts }
+      }
+    };
+
+    databaseTasks.unshift(newTask);
+    selectedTaskIds.push(newId);
+
+    renderTasks();
+    renderPreviewSheet();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    goToStep(0);
+    renderReadyTasks();
+  });
+  // Dynamiczne uzupełnianie tematów po wybraniu działu
+function handleSectionChange() {
+  const sectionSelect = document.getElementById('filter-section');
+  const topicSelect = document.getElementById('filter-topic');
+  const selectedSection = sectionSelect.value;
+
+  topicSelect.innerHTML = '<option value="">-- Wszystkie tematy --</option>';
+
+  if (selectedSection && topicsBySection[selectedSection]) {
+    topicsBySection[selectedSection].forEach(topic => {
+      const opt = document.createElement('option');
+      opt.value = topic;
+      opt.textContent = topic;
+      topicSelect.appendChild(opt);
+    });
+    topicSelect.disabled = false;
+  } else {
+    topicSelect.disabled = true;
+  }
+
+  applyFilters();
+}
+
+// Główna funkcja filtrująca listę zadań w bazie
+
+</script>
+</body>
+</html>

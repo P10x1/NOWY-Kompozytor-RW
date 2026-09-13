@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOWY Kompozytor klasówek i testów RW — Strona Główna</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f6f8;
+      color: #333;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Pasek górny */
+    header {
+      background-color: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 12px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background-color: #ff5500;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: bold;
+      color: #222;
+      line-height: 1.1;
+    }
+
+    .logo-text span {
+      display: block;
+      font-size: 11px;
+      font-weight: normal;
+      color: #666;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #0073b1;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-nav-login {
+      background: #0084c7;
+      color: white !important;
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-decoration: none !important;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .btn-nav-login:hover {
+      background: #006da7;
+    }
+
+    /* Sekcja Hero */
+    .hero-section {
+      background: linear-gradient(135deg, #0084c7 0%, #004b75 100%);
+      color: white;
+      padding: 50px 40px 70px 40px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      max-width: 750px;
+      margin: 0 auto 20px auto;
+      opacity: 0.95;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    /* Główny kontener z kartami i logowaniem */
+    .main-container {
+      max-width: 1200px;
+      margin: -40px auto 60px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 30px;
+      align-items: start;
+    }
+
+    /* Karta informacyjna z plakatem */
+    .info-card {
+      background: white;
+      border-radius: 12px;
+      padding: 35px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e0e0e0;
+    }
+
+    .info-card h2 {
+      font-size: 20px;
+      color: #222;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ff5500;
+      padding-bottom: 8px;
+      display: inline-block;
+    }
+
+    /* Sekcja Baneru / Plakatu Informacyjnego */
+    .poster-box {
+      background: linear-gradient(135deg, #fffaf5 0%, #fff4ec 100%);
+      border: 1px solid #ffd8c2;
+      border-left: 5px solid #ff5500;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    .poster-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .poster-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #cc4400;
+    }
+
+    .poster-content p {
+      font-size: 13px;
+      color: #444;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .poster-bullets {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px stroke #ffe0d0;
+    }
+
+    .poster-bullet-item {
+      font-size: 12px;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .feature-item {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 4px solid #0084c7;
+    }
+
+    .feature-item h3 {
+      font-size: 14px;
+      color: #0084c7;
+      margin-bottom: 6px;
+    }
+
+    .feature-item p {
+      font-size: 12px;
+      color: #555;
+    }
+
+    /* Karta logowania z zakładkami */
+    .login-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px 30px 30px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e0e0e0;
+    }
+
+    /* Zakładki logowania */
+    .login-tabs {
+      display: flex;
+      border-bottom: 2px solid #eef2f5;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 5px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-size: 13px;
+      font-weight: 600;
+      color: #777;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: #0084c7;
+      border-bottom-color: #0084c7;
+    }
+
+    .tab-btn-naustref.active {
+      color: #ff5500;
+      border-bottom-color: #ff5500;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .login-subtitle {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #444;
+    }
+
+    .email-input-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .email-input-wrapper:focus-within {
+      border-color: #ff5500;
+      box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.15);
+    }
+
+    .email-input-wrapper input {
+      border: none;
+      outline: none;
+      padding: 10px;
+      font-size: 13px;
+      flex: 1;
+      width: 50%;
+    }
+
+    .email-domain-tag {
+      background: #fff0e6;
+      color: #ff5500;
+      font-weight: bold;
+      padding: 10px 12px;
+      font-size: 12px;
+      border-left: 1px solid #ffd8c2;
+      user-select: none;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: #0084c7;
+      box-shadow: 0 0 0 2px rgba(0, 132, 199, 0.15);
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      background: #0084c7;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+
+    .btn-login-submit:hover {
+      background: #006da7;
+    }
+
+    .btn-login-naustref {
+      background: #ff5500;
+    }
+
+    .btn-login-naustref:hover {
+      background: #e04b00;
+    }
+
+    .login-footer-links {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .login-footer-links a {
+      color: #0084c7;
+      text-decoration: none;
+    }
+
+    .login-footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .alert-error {
+      display: none;
+      background: #fde8e8;
+      border: 1px solid #f8b4b4;
+      color: #9b1c1c;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    /* Stópka */
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      font-size: 12px;
+      border-top: 1px solid #e0e0e0;
+      background: white;
+    }
+
+    @media (max-width: 850px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+      .features-grid, .poster-bullets {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pasek górny -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">⪜</div>
+      <div class="logo-text">
+        NOWY Kompozytor
+        <span>klasówek i testów <b>rejskiego wydawnictwa</b></span>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#funkcje">Opcje i funkcje</a></li>
+        <li><a href="#plakat">Materiały RW</a></li>
+        <li><a href="#logowanie" class="btn-nav-login">Zaloguj się</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Sekcja Hero -->
+  <section class="hero-section">
+    <span class="hero-badge">Wydanie 2026 / 2027</span>
+    <h1 class="hero-title">NOWY Kompozytor Klasówek i Testów</h1>
+    <p class="hero-subtitle">
+      Oficjalny generator sprawdzianów i kartkówek dla nauczycieli Rejskiego Wydawnictwa. 
+      Twórz profesjonalne grupy A/B, modyfikuj zadania i przygotowuj gotowe wydruki A4.
+    </p>
+  </section>
+
+  <!-- Główny układ: Informacje + Formularz logowania -->
+  <div class="main-container">
+
+    <!-- Lewa strona: Opis systemu, plakat informacyjny i opcje -->
+    <div class="info-card" id="funkcje">
+      
+      <!-- Treść z plakatu promocyjnego/informacyjnego -->
+      <div class="poster-box" id="plakat">
+        <div class="poster-header">
+          <span style="font-size: 20px;">📢</span>
+          <div class="poster-title">Materiały Dydaktyczne Rejskiego Wydawnictwa</div>
+        </div>
+        <div class="poster-content">
+          <p>
+            System został w pełni zintegrowany z nową serią podręczników i zeszytów ćwiczeń. Umożliwia błyskawiczne generowanie kartkówek z bieżącego materiału oraz kompleksowych klasówek podsumowujących całe działy.
+          </p>
+          <div class="poster-bullets">
+            <div class="poster-bullet-item">✔ Pełna zgodność z podstawą programową</div>
+            <div class="poster-bullet-item">✔ Gotowe klucze odpowiedzi dla nauczyciela</div>
+            <div class="poster-bullet-item">✔ Kartkówki 10-minutowe i klasówki 45-minutowe</div>
+            <div class="poster-bullet-item">✔ Edytowalne schematy oceniania</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Funkcje i możliwości Kompozytora</h2>
+      <p style="color: #666; margin-bottom: 20px;">
+        Zyskaj dostęp do bogatej bazy wygenerowanych zadań oraz intuicyjnych narzędzi do automatycznego składu testów szkolnych.
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <h3>📚 Baza gotowych zadań</h3>
+          <p>Dostęp do zadań z podziałem na działy, tematy, typy pytań (zamknięte A/B/C, otwarte, tłumaczenia, luki) oraz stopnie trudności.</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>👥 Automatyczne Grupy A i B</h3>
+          <p>System sam dobiera alternatywne wersje pytań, tworząc zestawienia dla grupy A oraz B z jednakowym poziomem trudności.</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>✏️ Własny edytor treści</h3>
+          <p>Dodawaj własne polecenia, edytuj punktację, czas rozwiązania oraz generuj przejrzyste pola na odpowiedzi uczniów.</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>🖨️ Gotowy wydruk A4</h3>
+          <p>Generuj czyste arkusze do druku z nagłówkami, miejscem na dane ucznia, punkty, ocenę oraz stópką wydawniczą.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 25px; background: #eef2f5; padding: 15px; border-radius: 8px; font-size: 13px;">
+        <strong>💡 Informacja:</strong> Aby uzyskać dostęp do pełnej bazy testów ze wszystkich publikacji RW, zaloguj się identyfikatorem nauczycielskim lub kontem domeny <b>@naustref.pl</b>.
+      </div>
+    </div>
+
+    <!-- Prawa strona: Ulepszony Formularz Logowania z Zakładkami -->
+    <div class="login-card" id="logowanie">
+      
+      <!-- Wybór metody logowania -->
+      <div class="login-tabs">
+        <button type="button" class="tab-btn active" onclick="switchTab('standard')">Logowanie RW</button>
+        <button type="button" class="tab-btn tab-btn-naustref" onclick="switchTab('naustref')">Konto NauStrefa</button>
+      </div>
+
+      <div id="login-error" class="alert-error">
+        Niepoprawny login lub hasło. Upewnij się, że wpisujesz poprawne dane dostępowe.
+      </div>
+
+      <!-- Opcja 1: Standardowe Logowanie RW -->
+      <div id="tab-standard" class="tab-content active">
+        <div class="login-subtitle">Zaloguj się kontem Rejskiego Wydawnictwa</div>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="rw-login">E-mail:</label>
+			
+			
+			<div class="email-input-wrapper">
+              <input type="text" id="naustref-prefix" placeholder="twój przedrostek" required>
+              <div class="email-domain-tag">@rw.one.pl</div>
+            </div>
+			
+          </div>
+
+          <div class="form-group">
+            <label for="rw-password">Hasło:</label>
+            <input type="password" id="rw-password" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn-login-submit">Zaloguj się ⪜</button>
+        </form>
+      </div>
+
+      <!-- Opcja 2: Logowanie NauStrefa (@naustref.pl) -->
+      <div id="tab-naustref" class="tab-content">
+        <div class="login-subtitle">Logowanie poprzez system <b>NauStrefa</b></div>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="naustref-prefix">Login do serwisu NauStrefa</label>
+            <div class="email-input-wrapper">
+              <input type="text" id="naustref-prefix" placeholder="twój login" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="naustref-password">Hasło do serwisu NauStrefa:</label>
+            <input type="password" id="naustref-password" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn-login-submit btn-login-naustref">Zaloguj się przez NauStrefę ⪜</button>
+        </form>
+      </div>
+
+      <div class="login-footer-links">
+        <a href="#">Nie pamiętasz hasła?</a> • <a href="#">Pomoc techniczna RW</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Stópka -->
+  <footer>
+    &copy; 2026 Rejskie Wydawnictwo (RW). Wszelkie prawa zastrzeżone. | NOWY Kompozytor klasówek i testów
+  </footer>
+
+  <script>
+    function switchTab(tabName) {
+      // Przełączanie aktywnej zakładki
+      const tabs = document.querySelectorAll('.tab-btn');
+      tabs.forEach(tab => tab.classList.remove('active'));
+
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(content => content.classList.remove('active'));
+
+      if (tabName === 'standard') {
+        tabs[0].classList.add('active');
+        document.getElementById('tab-standard').classList.add('active');
+      } else {
+        tabs[1].classList.add('active');
+        document.getElementById('tab-naustref').classList.add('active');
+      }
+
+      // Ukrycie błędu przy zmianie karty
+      document.getElementById('login-error').style.display = 'none';
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      // Symulacja logowania – po kliknięciu przechodzi do aplikacji kompozytora
+      window.location.href = 'Kompozytornowy.html';
+    }
+  </script>
+</body>
+</html>
